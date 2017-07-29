@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Diamond Accounting DApp</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <style >
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+</head>
+<body class="container">
+  <h1> Diamond Accounting on Blockchain </h1>
+  <form id="data">
+  <fieldset>
+    <div>Asset File: <input id="image_file" name="image_file[]" type="file" /></div>
+    <div><input type="submit" value="Submit"></div>
+  </fieldset>
+</form>
+
+<img id="uploaded_image" src="#" alt="Diamond refraction index" style="width: 400px;" />
+
+  <div id="coordinate_hash"></div>
+
+
+
+  <div id="address"></div>
+  <div class="table-responsive">
+
+  <table class="table table-bordered">
+      <thead>
+        <tr>
+        <th>Product</th>
+          <th>Diamond Hash</th>
+          <th>Last Tx Account</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Diamond</td>
+          <td id="diamond-1"></td>
+          <td id="account-1"></td>
+        </tr>
+      </tbody>
+  </table>
+   
+  <div id="msg"></div>
+  </div>
+  <input type="text" id="prodHash" />
+  <a href="#" onclick="saveProductHash()" class="btn btn-primary">Save Product on Blockchain</a>
+  <div class="col-xs-12" style="height:20px;"></div>
+
+  <input type="text" id="prodHashGetAccounts" />
+  <a href="#" onclick="getAccountList()" class="btn btn-primary">Get Accounts List for a product</a>
+  <div class="col-xs-12" style="height:10px;"></div>
+
+  <div id="accountlist"></div>
+    <div class="col-xs-12" style="height:30px;"></div>
+
+
+  <p>Click the chose the account from a drop-down list.</p>
+  <div class="col-xs-12" style="height:20px;"></div>
+
+  <select id="mySelect" size="3">
+  <option>DeBeer's Company</option>
+  <option>Antwerp Exchange</option>
+  <option>Tanishq Koramangala</option>
+  </select>
+
+<div id="coordinates"></div>
+</body>
+<script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script src="app.js" type="text/javascript"></script>
+<script >
+  
+
+$(function() {
+
+  $("form#data").submit(function(event){
+
+    event.preventDefault();
+
+    var url  = 'http://localhost:8000/get_diamond_hash/';
+    var image_file = $('#image_file').get(0).files[0];
+
+    var formData = new FormData();
+    formData.append("image_file", image_file);
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: formData,
+      async: false,
+      cache: false,
+      contentType: false,
+      processData: false,
+      
+      success: function (reponse) {
+        console.log(reponse.coordinate_hash);
+        $("#coordinate_hash" ).html(reponse.coordinate_hash);
+        $("#coordinates" ).html(reponse.coordinate_string);
+
+      }
+    });
+
+    return false;
+
+  });
+
+});
+
+
+function readURL(input) 
+{
+   if (input.files && input.files[0])
+    {
+       var reader = new FileReader();
+       reader.onload = function (e) 
+       {
+           $('#uploaded_image').attr('src', e.target.result);
+       }   
+      reader.readAsDataURL(input.files[0]);
+   }
+}
+
+$("#image_file").change(function()
+{
+   readURL(this);
+});
+</script>
+
+</html>
+
